@@ -36,9 +36,9 @@ def parse_for_table(data):
             tmp_content = []
             for item in content:
                 tmp_content.append(item.split(":"))
-            tmp_table = []
+            tmp_table = [["Parameter", "Value", "Parameter", "Value"]]
             for i in range(0, len(tmp_content)//2):
-                tmp_table.append([tmp_content[i][0], tmp_content[i][1], tmp_content[i+1][0], tmp_content[i+1][1]])
+                tmp_table.append([tmp_content[i*2][0], tmp_content[i*2][1], tmp_content[i*2+1][0], tmp_content[i*2+1][1]])
             if len(tmp_content)%2 == 1:
                 tmp_table.append([tmp_content[len(tmp_content)//2+1][0], tmp_content[len(tmp_content)//2+1][1], "-empty-", "-empty-"])
             table[section_name] = tmp_table

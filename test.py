@@ -6,15 +6,80 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.units import cm  # Импортируем единицы измерения
 
 tsv_file = "D:\\Офисные технологии\\ЛР4\\4.1\\data\\2024-09-16_21-23-32.tsv"
+tsv_file = "D:\\Офисные технологии\\ЛР4\\4.1\\data\\2024-09-16_21-23-32_short.tsv"
 
+def build_document_compact(tables):
+    print("Создание компактного PDF документа...")
+    
+    # Еще более компактные поля
+    doc = SimpleDocTemplate("simple_table.pdf", 
+                          pagesize=A4,
+                          leftMargin=0.5*cm,
+                          rightMargin=0.5*cm,
+                          topMargin=0.7*cm,
+                          bottomMargin=0.7*cm)
+    
+    styles = getSampleStyleSheet()
+    story = []
+    
+    # Компактный стиль таблицы
+    compact_style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),  # Выравнивание по левому краю компактнее
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 7),    # Еще меньше шрифт
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), 2),   # Отступы сверху
+        ('LEFTPADDING', (0, 0), (-1, -1), 2),  # Отступы слева
+        ('RIGHTPADDING', (0, 0), (-1, -1), 2), # Отступы справа
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black)  # Более тонкие линии
+    ])
+    
+    # Создаем компактный стиль для текста
+    compact_text_style = styles['Normal']
+    compact_text_style.fontSize = 7
+    compact_text_style.leading = 9  # Межстрочный интервал
+    
+    compact_title_style = styles['Heading2']
+    compact_title_style.fontSize = 12
+    compact_title_style.leading = 14
+    
+    for section_name, content in tables.items():
+        print(f"Обработка: {section_name}")
+        
+        title = Paragraph(f"<b>{section_name}</b>", compact_title_style)
+        story.append(title)
+        story.append(Spacer(1, 4))  # Минимальный отступ
+        
+        if content:
+            table_data = []
+            for line in content:
+                if isinstance(line, str) and line.strip():
+                    table_data.append([Paragraph(line, compact_text_style)])
+                elif isinstance(line, list):
+                    row = [Paragraph(str(cell), compact_text_style) for cell in line]
+                    table_data.append(row)
+            
+            if table_data:
+                table = Table(table_data)
+                table.setStyle(compact_style)
+                story.append(table)
+                story.append(Spacer(1, 8))  # Компактный отступ между таблицами
+    
+    if story:
+        doc.build(story)
+        print("Компактный PDF создан успешно!")
 
 def build_document(tables):
     print("Создание PDF документа...")
     
     # Создаем документ
-    doc = SimpleDocTemplate("simple_table.pdf", pagesize=A4)
+    doc = SimpleDocTemplate("simple_table.pdf", pagesize=A4, )
     styles = getSampleStyleSheet()
     story = []  # Список всех элементов документа
     
@@ -82,7 +147,7 @@ def create_simple_pdf_table():
     print_parse_data(readed_file)
     tables = parse_for_table(readed_file)
     print_parse_data(tables)
-    build_document(tables)
+    build_document_compact(tables)
 
 # Запуск
 create_simple_pdf_table()
