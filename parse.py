@@ -49,44 +49,9 @@ def parse_for_table(data):
             table[section_name] = tmp_table
     return table
 
-
-
-
-
-
 def print_parse_data(data):
     # Выводим результат
     print("Содержимое файла разбито на разделы:")
     for section_name, content in data.items():
         print(f"\n({section_name}")
         print(f"{content})")
-
-def main():
-    test_content = """==Items==
-dzfgzdfG:dfgdfg zdfgdG:dzfgzdfg zdfgdfg:zdfgdg
-
-==Data==
-1 2 3 4
-fdg dfg  jikew as
-fdg lpk wl z 
-et l '; sz
-
-==Results==
-Результаты эксперимента показывают...
-Данные подтверждают гипотезу.
-
-==Conclusion==
-В заключение можно сказать, что...
-"""
-
-    # Записываем тестовый файл
-    with open('test_file.txt', 'w', encoding='utf-8') as f:
-        f.write(test_content)
-
-    # Парсим файл
-    sections = parse_sections_file('test_file.txt')
-    print_parse_data(sections)
-    print_parse_data(parse_for_table(sections))
-    
-if __name__ == "__main__":
-    main()
