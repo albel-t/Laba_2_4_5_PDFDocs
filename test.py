@@ -21,6 +21,7 @@ def build_document_compact(tables):
     
     styles = getSampleStyleSheet()
     story = []
+
     # Компактный стиль таблицы
     compact_style = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
